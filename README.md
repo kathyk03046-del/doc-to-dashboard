@@ -28,7 +28,6 @@ Works best with structured documents — reports, specs, research notes, referen
 ## Examples
 
 Input: Wikipedia article — unstructured, text-heavy, no formatting
-Output: ↓
 <table>
   <tr>
     <td><img width="1710" height="988" alt="image" src="https://github.com/user-attachments/assets/6057835a-56f3-4b4e-bcf9-0f55f372f4ad" />
@@ -36,4 +35,11 @@ Output: ↓
   </tr>
 </table>
 
+Input: World Data
+<table>
+  <tr>
+    <td><img width="1710" height="841" alt="image" src="https://github.com/user-attachments/assets/d0b0b304-d0e0-4491-8bc0-aa5f2dcced9d" />
+    <td><img width="1710" height="841" alt="image" src="https://github.com/user-attachments/assets/d5c3c48a-2731-4026-8d30-821b0afedde7" />
+  </tr>
+</table>
 
