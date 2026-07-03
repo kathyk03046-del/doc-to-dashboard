@@ -1,22 +1,18 @@
 # doc-to-dashboard
 
-You got a document. You need to know what's in it — fast.
-The output is an HTML file you can open, scan, and pass on — no reformatting needed.
+Most AI tools solve for "I don't want to read this." 
+But reading still matters — especially for legal documents, medical records, 
+academic papers, and high-stakes decisions where details can't be skipped and summaries aren't enough.
+
+doc-to-dashboard solves for "I need to read this, but I need to finish it with ease."
+It doesn't rewrite your document or compress its meaning. It gives you structure and visual navigation — so you can enter dense text faster and keep every detail within reach.
 
 ## How to Use
 
 0. git clone https://github.com/kathyk03046-del/doc-to-dashboard
-1. Open Claude Code in any project
-2. Type @doc-to-dashboard/SKILL.md
-3. Paste your document or drop a file path
-
-## Supported formats
-
-| Format | Notes |
-|--------|-------|
-| `.md`, `.txt` | Read directly |
-| `.pdf` | Requires `pdftotext` or `pandoc` in your environment |
-| `.docx` | Requires `pandoc` or `python-docx` in your environment |
+1. Copy SKILL.md to your project's .claude/commands/doc-to-dashboard.md
+2. Open Claude Code in your project
+3. /doc-to-dashboard your-file.md
 
 ## What you get
 
