@@ -3,13 +3,12 @@
 You got a document. You need to know what's in it — fast.
 The output is an HTML file you can open, scan, and pass on — no reformatting needed.
 
-## Usage
+## How to Use
 
-```
-/doc-to-dashboard /path/to/your/document.md
-```
-
-Paste text directly if you don't have a file path. No style or domain parameter needed.
+0. git clone https://github.com/kathyk03046-del/doc-to-dashboard
+1. Open Claude Code in any project
+2. Type @doc-to-dashboard/SKILL.md
+3. Paste your document or drop a file path
 
 ## Supported formats
 
@@ -21,7 +20,26 @@ Paste text directly if you don't have a file path. No style or domain parameter 
 
 ## What you get
 
-A single `.html` file — section navigation, tables, charts for numeric data, and a built-in light/dark theme toggle (same CSS tokens every time, no domain-based color guessing).
+A single `.html` file — section navigation, tables, charts for numeric data, color scheme matched to the document's subject.
 Written next to your source file, named `<source>-dashboard.html`. Open it, share it.
 
 Works best with structured documents — reports, specs, research notes, reference wikis.
+
+## Examples
+
+Input: Wikipedia article — unstructured, text-heavy, no formatting
+<table>
+  <tr>
+    <td><img width="1710" height="988" alt="image" src="https://github.com/user-attachments/assets/6057835a-56f3-4b4e-bcf9-0f55f372f4ad" />
+    <td><img width="1710" height="988" alt="image" src="https://github.com/user-attachments/assets/7c502ccb-820f-408c-814a-c7afe1922e17" />
+  </tr>
+</table>
+
+Input: World Data
+<table>
+  <tr>
+    <td><img width="1710" height="841" alt="image" src="https://github.com/user-attachments/assets/d0b0b304-d0e0-4491-8bc0-aa5f2dcced9d" />
+    <td><img width="1710" height="841" alt="image" src="https://github.com/user-attachments/assets/d5c3c48a-2731-4026-8d30-821b0afedde7" />
+  </tr>
+</table>
+
