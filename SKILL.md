@@ -1,7 +1,7 @@
 ---
 name: doc-to-dashboard
 description: |
-  Convert a structured document (.md, .pdf, .docx, .txt, pasted text, or attachment) into a single self-contained, interactive HTML dashboard with a built-in light/dark theme toggle. Trigger via the /doc-to-dashboard command — no style or domain parameter needed.
+  Convert a structured document (.md, .pdf, .docx, .txt, pasted text, or attachment) into a single self-contained, interactive HTML dashboard with a built-in light/dark theme toggle. Preserves source content verbatim — restructures for navigation, never summarizes. Built for detail-critical reading: legal, medical, research, incident records. Trigger via the /doc-to-dashboard command — no style or domain parameter needed.
 ---
 
 # doc-to-dashboard
@@ -36,6 +36,20 @@ Confirm the output path to the user after writing.
 **Hard constraint:** the output HTML must contain zero references to local filesystem paths. All content must be embedded inline. Validate this before writing.
 
 ## Dashboard design rules
+
+### Content fidelity (non-negotiable)
+
+This skill exists for readers who cannot afford to lose detail: legal, medical, research, and incident documentation. Your job is to **restructure and navigate, not to interpret or compress.**
+
+- Do not summarize, paraphrase, or modify the source content in any way. Prose blocks, quotes, and clauses go into cards verbatim.
+- Reproduce numbers, dates, names, citations, section/clause references, and units exactly as they appear in the source — no rounding, no unit conversion, no rewording.
+- When condensing a list or table into cards, include every item. Never a "top N" sample or a representative subset.
+- Long paragraphs stay intact — wrap or let a card scroll rather than cutting text short or ellipsizing.
+- A chart is a supplement, never a substitute for the source values: always keep the exact underlying numbers visible nearby in a table or list.
+
+**Example** — source sentence: *"Anthropic maintains contractual restrictions prohibiting Claude use for domestic surveillance and fully autonomous weapons."*
+- Wrong (paraphrased): "Anthropic won't let Claude be used for spying on citizens or in autonomous weapons."
+- Right (verbatim): "Anthropic maintains contractual restrictions prohibiting Claude use for domestic surveillance and fully autonomous weapons."
 
 ### Structure detection (do this first)
 
@@ -104,6 +118,7 @@ If numeric data is detected (tables with numbers, time-series, comparisons):
   - Parts of a whole → doughnut chart
   - Two numeric variables → scatter
 - If chart type is ambiguous, default to bar and add `<!-- chart type: bar (defaulted) -->` in the HTML
+- Charts summarize visually but must never be the only place a value lives — keep the source table next to (or below) the chart with the exact figures (see Content fidelity)
 
 ### Interactivity
 
@@ -144,6 +159,8 @@ Border radius: 8px
   Charts: [list or "none"]
   Degraded sections: [list or "none"]
   Ambiguities noted: [list or "none"]
+  Fidelity: verbatim — no summarization, paraphrasing, or omitted items
+  Unread portions: [none, or exact range/pages not read, if document exceeded a single read]
   -->
   <header><!-- title + metadata + theme toggle button --></header>
   <nav><!-- tabs or sidebar --></nav>
@@ -160,7 +177,7 @@ The decision log lives as an HTML comment so it's invisible to end users but rea
 | Situation | Action |
 |-----------|--------|
 | File not found | Stop, ask user to verify path |
-| File too large to read fully | Process first ~8000 words, note truncation visibly in the dashboard header |
+| Document exceeds a single read (long PDF, huge markdown file) | Read it in sequential chunks and process all of them — never drop content to fit. If a hard tool limit genuinely prevents reading the whole thing, stop and tell the user which portion couldn't be read rather than silently truncating |
 | No discernible structure | Single-panel dashboard with full text in a readable container; banner: "No structure detected — displaying raw content" |
 | PDF/DOCX extraction tool unavailable | Tell the user which tool is missing and ask them to paste the text |
 
