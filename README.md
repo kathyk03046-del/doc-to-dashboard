@@ -8,6 +8,7 @@ doc-to-dashboard solves for "I need to read this, but I need to finish it with e
 It doesn't rewrite your document or compress its meaning. It gives you structure and visual navigation — so you can enter dense text faster and keep every detail within reach.
 
 ## How to Use
+Sonnet is sufficient — no need for Opus
 
 0. git clone https://github.com/kathyk03046-del/doc-to-dashboard
 1. Copy SKILL.md to your project's .claude/commands/doc-to-dashboard.md
