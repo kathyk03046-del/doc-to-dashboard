@@ -5,15 +5,11 @@ The output is an HTML file you can open, scan, and pass on — no reformatting n
 
 ## Usage
 
-Requires Claude Code with `@mention` support.
-
 ```
-@doc-to-dashboard/SKILL.md
-
-/path/to/your/document.md
+/doc-to-dashboard /path/to/your/document.md
 ```
 
-Paste text directly if you don't have a file path.
+Paste text directly if you don't have a file path. No style or domain parameter needed.
 
 ## Supported formats
 
@@ -25,7 +21,7 @@ Paste text directly if you don't have a file path.
 
 ## What you get
 
-A single `.html` file — section navigation, tables, charts for numeric data, color scheme matched to the document's subject.
+A single `.html` file — section navigation, tables, charts for numeric data, and a built-in light/dark theme toggle (same CSS tokens every time, no domain-based color guessing).
 Written next to your source file, named `<source>-dashboard.html`. Open it, share it.
 
 Works best with structured documents — reports, specs, research notes, reference wikis.

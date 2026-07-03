@@ -1,10 +1,16 @@
+---
+name: doc-to-dashboard
+description: |
+  Convert a structured document (.md, .pdf, .docx, .txt, pasted text, or attachment) into a single self-contained, interactive HTML dashboard with a built-in light/dark theme toggle. Trigger via the /doc-to-dashboard command — no style or domain parameter needed.
+---
+
 # doc-to-dashboard
 
 Convert any structured document into a self-contained, interactive HTML dashboard that opens directly in a browser — and is safe to share with others.
 
 ## Trigger
 
-User @mentions this file and provides a document (file path, pasted text, or attachment).
+User invokes `/doc-to-dashboard` and provides a document (file path, pasted text, or attachment). No style parameter is needed — every dashboard ships with the same light/dark CSS tokens and a built-in toggle.
 
 ## What you produce
 
@@ -46,21 +52,47 @@ When structure is unclear, prefer explicit degradation: show the content in a cl
 
 - Use a top tab bar for ≤4 sections, a sidebar for ≥5 sections
 - Responsive: readable at 1280px desktop minimum
-- Dark header/nav, light content area
+- Header/nav and content area colors come from the theme tokens below, not fixed hex values
 
-### Color
+### Theme (light/dark CSS tokens + built-in toggle)
 
-Infer the color palette from the document's domain:
+Every dashboard ships with the same two token sets — never infer a palette from document domain or content. Define both as CSS custom properties, default to light, and let the user flip between them at runtime.
 
-| Domain signals | Palette |
-|---------------|---------|
-| Finance, revenue, budget | Green (#16a34a) for positive, red (#dc2626) for negative; neutral dark nav |
-| Health, medical | Calm blue (#2563eb), white content |
-| Research, academic | Neutral dark (#1e293b) nav, slate content |
-| Product, roadmap | Purple (#7c3aed) accent |
-| No clear domain | Neutral: dark nav (#1e293b), slate accent (#475569) |
+```css
+:root {
+  --bg: #ffffff;
+  --bg-elevated: #f8fafc;
+  --card-bg: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --border: #e2e8f0;
+  --nav-bg: #1e293b;
+  --nav-text: #f8fafc;
+  --accent: #2563eb;
+  --accent-positive: #16a34a;
+  --accent-negative: #dc2626;
+}
 
-Do not use a fixed accent color regardless of domain. If domain inference is ambiguous, use the neutral palette and note it in the decision log.
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-elevated: #1e293b;
+  --card-bg: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #334155;
+  --nav-bg: #020617;
+  --nav-text: #f8fafc;
+  --accent: #3b82f6;
+  --accent-positive: #22c55e;
+  --accent-negative: #f87171;
+}
+```
+
+Rules:
+- All colors in the generated CSS must reference `var(--token)`, never hardcoded hex values, so the toggle covers 100% of the UI (including chart colors — read them from the tokens at render time).
+- Place a toggle control (icon button, e.g. ☀/☾) in the header. On click, flip `document.documentElement.dataset.theme` between `"light"` and `"dark"`.
+- Persist the choice in `localStorage` and apply it before first paint (inline script in `<head>`, before the stylesheet renders) to avoid a flash of the wrong theme.
+- Respect `prefers-color-scheme` only as the initial default when no `localStorage` value exists yet; the explicit toggle always wins after that.
 
 ### Numeric data → charts
 
@@ -77,6 +109,7 @@ If numeric data is detected (tables with numbers, time-series, comparisons):
 
 - Tab/section switching with smooth transitions
 - Tables: sortable columns (vanilla JS, no library)
+- Light/dark theme toggle in the header (see Theme section above) — required on every dashboard
 - Add a search/filter box only if the document contains a long enumeration that a user would realistically want to scan: a glossary, a list of ≥20 named items, or a data table with ≥15 rows. Do not add search for ordinary prose sections.
 - Collapsible subsections if nesting depth ≥ 2
 
@@ -86,7 +119,7 @@ If numeric data is detected (tables with numbers, time-series, comparisons):
 Font: system-ui, -apple-system, sans-serif
 Base size: 15px
 Line height: 1.6
-Card background: #ffffff, 1px border #e2e8f0
+Card background: var(--card-bg), 1px border var(--border)
 Border radius: 8px
 ```
 
@@ -100,22 +133,22 @@ Border radius: 8px
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>[Document Title] — Dashboard</title>
   <!-- Chart.js CDN only if numeric data present -->
-  <style>/* all styles inline */</style>
+  <script>/* inline: apply saved/preferred theme to <html data-theme> before first paint */</script>
+  <style>/* all styles inline, all colors via var(--token) */</style>
 </head>
 <body>
   <!--
   DASHBOARD LOG
   Source: [filename or "pasted text"]
-  Domain detected: [domain or "none — using neutral palette"]
   Sections: [list]
   Charts: [list or "none"]
   Degraded sections: [list or "none"]
   Ambiguities noted: [list or "none"]
   -->
-  <header><!-- title + metadata --></header>
+  <header><!-- title + metadata + theme toggle button --></header>
   <nav><!-- tabs or sidebar --></nav>
   <main><!-- section content --></main>
-  <script>/* all JS inline */</script>
+  <script>/* all JS inline, incl. theme toggle handler */</script>
 </body>
 </html>
 ```
@@ -134,13 +167,10 @@ The decision log lives as an HTML comment so it's invisible to end users but rea
 ## Example invocations
 
 ```
-@doc-to-dashboard/SKILL.md
-
-/path/to/q2-report.md
+/doc-to-dashboard /path/to/q2-report.md
 ```
 
 ```
-@doc-to-dashboard/SKILL.md
-
+/doc-to-dashboard
 [pastes raw text]
 ```
